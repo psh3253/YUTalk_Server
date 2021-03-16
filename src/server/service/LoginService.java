@@ -1,6 +1,5 @@
 package server.service;
 
-
 import server.dao.MemberDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
@@ -9,35 +8,40 @@ import server.model.Member;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class RegisterService {
+public class LoginService {
 
-    public static final int REGISTER_SUCCESS = 0;
+    private static final int LOGIN_SUCCESS = 0;
 
-    public static final int DUPLICATE_ID = 1;
+    private static final int NOT_EXIST_ID = 1;
 
-    public static RegisterService instance = null;
+    private static final int NOT_MATCH_PASSWORD = 2;
 
-    public static RegisterService getInstance() {
+    private static LoginService instance = null;
+
+    public static LoginService getInstance() {
         if (instance == null)
-            instance = new RegisterService();
+            instance = new LoginService();
         return instance;
     }
 
-    public int register(String userId, String password, String name) {
+    public int login(String userId, String password) {
         Connection connection = null;
         try {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
 
             Member member = MemberDao.getInstance().selectByUserId(connection, userId);
-            if(member != null) {
+            if (member == null) {
                 JdbcUtil.getInstance().rollback(connection);
-                return DUPLICATE_ID;
+                return NOT_EXIST_ID;
+            } else if (!password.equals(member.getPassword())) {
+                JdbcUtil.getInstance().rollback(connection);
+                return NOT_MATCH_PASSWORD;
             }
 
-            MemberDao.getInstance().insertRegister(connection, userId, password, name);
+            MemberDao.getInstance().updateLogin(connection, userId);
             connection.commit();
-            return REGISTER_SUCCESS;
+            return LOGIN_SUCCESS;
         } catch (SQLException exception) {
             JdbcUtil.getInstance().rollback(connection);
             throw new RuntimeException(exception);

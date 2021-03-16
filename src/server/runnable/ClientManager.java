@@ -2,6 +2,7 @@ package server.runnable;
 
 import server.dao.MemberDao;
 import server.model.Member;
+import server.service.LoginService;
 import server.service.RegisterService;
 
 import javax.swing.*;
@@ -34,6 +35,13 @@ public class ClientManager implements Runnable{
                         int responseCode = RegisterService.getInstance().register(receivedObject[1], receivedObject[2], receivedObject[3]);
                         String[] responseObject = new String[2];
                         responseObject[0] = "registerResponse";
+                        responseObject[1] = Integer.toString(responseCode);
+                        out.writeObject(responseObject);
+                        out.flush();
+                    } else if(receivedObject[0].equals("loginRequest")) {
+                        int responseCode = LoginService.getInstance().login(receivedObject[1], receivedObject[2]);
+                        String [] responseObject = new String[2];
+                        responseObject[0] = "loginResponse";
                         responseObject[1] = Integer.toString(responseCode);
                         out.writeObject(responseObject);
                         out.flush();
