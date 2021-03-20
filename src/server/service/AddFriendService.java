@@ -1,5 +1,6 @@
 package server.service;
 
+import server.dao.FriendDao;
 import server.dao.MemberDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
@@ -8,46 +9,41 @@ import server.model.Member;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class LoginService {
+public class AddFriendService {
 
-    private static final int LOGIN_SUCCESS = 0;
+    private static final int ADD_FRIEND_SUCCESS = 0;
 
     private static final int NOT_EXIST_ID = 1;
 
-    private static final int NOT_MATCH_PASSWORD = 2;
+    public static AddFriendService instance = null;
 
-    private static LoginService instance = null;
-
-    public static LoginService getInstance() {
+    public static AddFriendService getInstance() {
         if (instance == null)
-            instance = new LoginService();
+            instance = new AddFriendService();
         return instance;
     }
 
-    public String[] login(String userId, String password) {
+    public String[] addFriend(String userId, String friendId) {
         Connection connection = null;
         String[] response = new String[5];
-        response[0] = "loginResponse";
+        response[0] = "addFriendResponse";
         try {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            Member member = MemberDao.getInstance().selectByUserId(connection, userId);
+            Member member = MemberDao.getInstance().selectByUserId(connection, friendId);
             if (member == null) {
                 JdbcUtil.getInstance().rollback(connection);
                 response[1] = Integer.toString(NOT_EXIST_ID);
                 return response;
-            } else if (!password.equals(member.getPassword())) {
-                JdbcUtil.getInstance().rollback(connection);
-                response[1] = Integer.toString(NOT_MATCH_PASSWORD);
-                return response;
             }
-            MemberDao.getInstance().updateLogin(connection, userId);
+            FriendDao.getInstance().insertFriend(connection, userId, friendId);
 
+            response[1] = Integer.toString(ADD_FRIEND_SUCCESS);
+            response[2] = member.getUserId();
+            response[3] = member.getName();
+            response[4] = member.getStatusMessage();
             connection.commit();
-            response[1] = Integer.toString(LOGIN_SUCCESS);
-            response[2] = member.getName();
-            response[3] = member.getStatusMessage();
             return response;
         } catch (SQLException exception) {
             JdbcUtil.getInstance().rollback(connection);

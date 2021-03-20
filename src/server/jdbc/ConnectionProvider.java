@@ -25,7 +25,7 @@ public class ConnectionProvider {
             String dbPassword = "admin";
             connection = DriverManager.getConnection(url, dbUsername, dbPassword);
         } catch (ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "NySQL 드라이버를 찾을 수 없습니다.", "실행 실패", JOptionPane.WARNING_MESSAGE);
+            System.out.println("MySQL 데이터베이스에 접근을 할 수 없습니다.");
             System.exit(-1);
         }
     }
