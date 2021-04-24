@@ -29,7 +29,7 @@ public class RegisterService {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            Member member = MemberDao.getInstance().selectByUserId(connection, userId);
+            Member member = MemberDao.getInstance().selectMember(connection, userId);
             if(member != null) {
                 JdbcUtil.getInstance().rollback(connection);
                 return DUPLICATE_ID;

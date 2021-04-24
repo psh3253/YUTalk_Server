@@ -18,7 +18,7 @@ public class MemberDao {
         return instance;
     }
 
-    public Member selectByUserId(Connection connection, String userId) throws SQLException {
+    public Member selectMember(Connection connection, String userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         Member member = null;

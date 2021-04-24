@@ -2,7 +2,7 @@ package server.model;
 
 import java.util.Date;
 
-public class Member {
+public class Member{
 
     private String userId;
     private String password;

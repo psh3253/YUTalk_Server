@@ -29,9 +29,9 @@ public class LoadFriendService {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            ArrayList<String> friendList = FriendDao.getInstance().selectFriend(connection, userId);
+            ArrayList<String> friendList = FriendDao.getInstance().selectFriendList(connection, userId);
             for (int i = 0; i < friendList.size(); i++) {
-                Member member = MemberDao.getInstance().selectByUserId(connection, friendList.get(i));
+                Member member = MemberDao.getInstance().selectMember(connection, friendList.get(i));
                 friendData.put(friendList.get(i), new String[]{member.getUserId(), member.getName(), member.getStatusMessage()});
             }
 

@@ -1,14 +1,13 @@
 package server.runnable;
 
-import server.service.AddFriendService;
-import server.service.LoadFriendService;
-import server.service.LoginService;
-import server.service.RegisterService;
+import server.model.ChatRoom;
+import server.service.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientManager implements Runnable {
@@ -50,6 +49,10 @@ public class ClientManager implements Runnable {
                         out.flush();
                     } else if(receivedObject[0].equals("loadFriendRequest")) {
                         HashMap<String, HashMap<String, String[]>> responseObject = LoadFriendService.getInstance().loadFriend(receivedObject[1]);
+                        out.writeObject(responseObject);
+                        out.flush();
+                    } else if(receivedObject[0].equals("loadChatRoomRequest")) {
+                        HashMap<String, ArrayList<ChatRoom>> responseObject = LoadChatRoomService.getInstance().loadChatRoom(receivedObject[1]);
                         out.writeObject(responseObject);
                         out.flush();
                     }

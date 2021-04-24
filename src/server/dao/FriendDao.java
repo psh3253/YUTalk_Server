@@ -30,7 +30,7 @@ public class FriendDao {
         }
     }
 
-    public ArrayList<String> selectFriend(Connection connection, String userId) throws SQLException{
+    public ArrayList<String> selectFriendList(Connection connection, String userId) throws SQLException{
         ArrayList<String> friendUserIdList = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet resultSet = null;

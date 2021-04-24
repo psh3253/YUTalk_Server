@@ -31,7 +31,7 @@ public class AddFriendService {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            Member member = MemberDao.getInstance().selectByUserId(connection, friendId);
+            Member member = MemberDao.getInstance().selectMember(connection, friendId);
             if (member == null) {
                 JdbcUtil.getInstance().rollback(connection);
                 response[1] = Integer.toString(NOT_EXIST_ID);
