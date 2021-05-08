@@ -1,5 +1,6 @@
 package server.dao;
 
+import jdk.nashorn.internal.scripts.JD;
 import server.jdbc.JdbcUtil;
 import server.model.ChatRoom;
 
@@ -36,7 +37,7 @@ public class ChatRoomDao {
         }
     }
 
-    public ChatRoom selectChatRoom(Connection connection, int roomId, String userId) throws SQLException {
+    public ChatRoom selectChatRoom(Connection connection, int roomId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         ChatRoom chatRoom = null;
@@ -60,6 +61,35 @@ public class ChatRoomDao {
             return chatRoom;
         } finally {
             JdbcUtil.getInstance().close(resultSet);
+            JdbcUtil.getInstance().close(statement);
+        }
+    }
+
+    public void deleteMemberFromChatRoom(Connection connection, String userId, int roomId) throws SQLException{
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("DELETE FROM chat_member WHERE user_id = ? AND room_id = ?");
+            statement.setString(1, userId);
+            statement.setInt(2, roomId);
+            statement.executeUpdate();
+            statement = connection.prepareStatement("UPDATE chat_room SET headcount = headcount - 1 WHERE room_id = ?");
+            statement.setInt(1, roomId);
+            statement.executeUpdate();
+        } finally {
+            JdbcUtil.getInstance().close(statement);
+        }
+    }
+
+    public void deleteChatRoom(Connection connection, int roomId) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("DELETE FROM chat_member WHERE room_id = ?");
+            statement.setInt(1, roomId);
+            statement.executeUpdate();
+            statement = connection.prepareStatement("DELETE FROM chat_room WHERE room_id = ?");
+            statement.setInt(1, roomId);
+            statement.executeUpdate();
+        } finally {
             JdbcUtil.getInstance().close(statement);
         }
     }

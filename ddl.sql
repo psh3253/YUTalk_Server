@@ -47,12 +47,12 @@ CREATE TABLE yutalk.chat_member
 
 CREATE TABLE yutalk.message
 (
-    message_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(15) NOT NULL,
-    room_id INT NOT NULL,
+    message_id   INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id      VARCHAR(15) NOT NULL,
+    room_id      INT         NOT NULL,
     message_type VARCHAR(15) NOT NULL,
-    message TEXT NOT NULL,
-    send_time TIMESTAMP NOT NULL
+    message      TEXT        NOT NULL,
+    send_time    TIMESTAMP   NOT NULL
 )
 
 

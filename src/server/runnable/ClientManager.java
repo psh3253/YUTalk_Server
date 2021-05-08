@@ -1,13 +1,13 @@
 package server.runnable;
 
-import server.model.ChatRoom;
+import server.model.Client;
+import server.model.ClientList;
 import server.service.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientManager implements Runnable {
@@ -43,16 +43,21 @@ public class ClientManager implements Runnable {
                         String[] responseObject = LoginService.getInstance().login(receivedObject[1], receivedObject[2]);
                         out.writeObject(responseObject);
                         out.flush();
+                        if(responseObject[1].equals("0")) {
+                            ClientList.clientList.put(receivedObject[1], new Client(socket, in, out));
+                        }
                     } else if (receivedObject[0].equals("addFriendRequest")) {
                         String[] responseObject = AddFriendService.getInstance().addFriend(receivedObject[1], receivedObject[2]);
                         out.writeObject(responseObject);
                         out.flush();
-                    } else if(receivedObject[0].equals("loadFriendRequest")) {
+                    } else if (receivedObject[0].equals("leaveChatRoomRequest")) {
+                        LeaveChatRoomService.getInstance().leaveChatRoom(receivedObject[1], Integer.parseInt(receivedObject[2]));
+                    } else if (receivedObject[0].equals("loadFriendRequest")) {
                         HashMap<String, HashMap<String, String[]>> responseObject = LoadFriendService.getInstance().loadFriend(receivedObject[1]);
                         out.writeObject(responseObject);
                         out.flush();
-                    } else if(receivedObject[0].equals("loadChatRoomRequest")) {
-                        HashMap<String, ArrayList<ChatRoom>> responseObject = LoadChatRoomService.getInstance().loadChatRoom(receivedObject[1]);
+                    } else if (receivedObject[0].equals("loadChatRoomRequest")) {
+                        HashMap<String, HashMap<Integer, String[]>> responseObject = LoadChatRoomService.getInstance().loadChatRoom(receivedObject[1]);
                         out.writeObject(responseObject);
                         out.flush();
                     }
