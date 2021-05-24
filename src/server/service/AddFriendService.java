@@ -11,11 +11,11 @@ import java.sql.SQLException;
 
 public class AddFriendService {
 
+    public static AddFriendService instance = null;
+
     private static final int ADD_FRIEND_SUCCESS = 0;
 
     private static final int NOT_EXIST_ID = 1;
-
-    public static AddFriendService instance = null;
 
     public static AddFriendService getInstance() {
         if (instance == null)

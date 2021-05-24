@@ -66,4 +66,16 @@ public class MemberDao {
             JdbcUtil.getInstance().close(statement);
         }
     }
+
+    public void updateStatusMessage(Connection connection, String userId, String statusMessage) throws SQLException{
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("UPDATE member SET status_message = ? WHERE user_id = ?");
+            statement.setString(1, statusMessage);
+            statement.setString(2, userId);
+            statement.executeUpdate();
+        } finally {
+            JdbcUtil.getInstance().close(statement);
+        }
+    }
 }

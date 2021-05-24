@@ -6,8 +6,11 @@ import server.jdbc.JdbcUtil;
 import server.model.ChatRoom;
 import server.model.ClientList;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class LeaveChatRoomService {
 
@@ -31,11 +34,8 @@ public class LeaveChatRoomService {
                 ChatRoomDao.getInstance().deleteChatRoom(connection, roomId);
             } else {
                 ChatRoomDao.getInstance().deleteMemberFromChatRoom(connection, userId, roomId);
-                chatRoom = ChatRoomDao.getInstance().selectChatRoom(connection, roomId);
-                for(int i=0; i< ClientList.clientList.size(); i++) {
-
-                }
             }
+            connection.commit();
         } catch (SQLException exception) {
             JdbcUtil.getInstance().rollback(connection);
             throw new RuntimeException(exception);
