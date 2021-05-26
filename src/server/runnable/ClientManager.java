@@ -1,13 +1,12 @@
 package server.runnable;
 
-import server.model.Client;
-import server.model.ClientList;
 import server.service.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientManager implements Runnable {
@@ -46,9 +45,6 @@ public class ClientManager implements Runnable {
                             String[] responseObject = LoginService.getInstance().login(receivedObject[1], receivedObject[2]);
                             out.writeObject(responseObject);
                             out.flush();
-                            if (responseObject[1].equals("0")) {
-                                ClientList.clientList.put(receivedObject[1], new Client(socket, in, out));
-                            }
                             break;
                         }
                         case "addFriendRequest": {
@@ -104,6 +100,12 @@ public class ClientManager implements Runnable {
                         }
                         case "loadMessageRequest": {
                             HashMap<String, HashMap<Integer, String[]>> responseObject = LoadMessageService.getInstance().loadMessage(Integer.parseInt(receivedObject[1]));
+                            out.writeObject(responseObject);
+                            out.flush();
+                            break;
+                        }
+                        case "loadChatRoomMemberRequest": {
+                            HashMap<String, ArrayList<String[]>> responseObject = LoadChatRoomMemberService.getInstance().loadChatRoomMember(Integer.parseInt(receivedObject[1]));
                             out.writeObject(responseObject);
                             out.flush();
                             break;

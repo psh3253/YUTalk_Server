@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 public class ConnectionProvider {
 
-    private Connection connection = null;
-
     private static ConnectionProvider instance = null;
+
+    private Connection connection = null;
 
     public static ConnectionProvider getInstance() {
         if (instance == null)

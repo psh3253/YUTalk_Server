@@ -1,6 +1,7 @@
 package server.service;
 
 import server.dao.ChatRoomDao;
+import server.dao.MemberDao;
 import server.dao.MessageDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
@@ -36,6 +37,7 @@ public class LoadMessageService {
                 messageData.put(messageList.get(i), new String[]{
                         Integer.toString(message.getMessageId()),
                         message.getUserId(),
+                        MemberDao.getInstance().selectMember(connection, message.getUserId()).getName(),
                         message.getMessageType(),
                         message.getMessage(),
                         format.format(message.getSendTime())

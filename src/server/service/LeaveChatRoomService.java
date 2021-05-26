@@ -4,13 +4,9 @@ import server.dao.ChatRoomDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
 import server.model.ChatRoom;
-import server.model.ClientList;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class LeaveChatRoomService {
 
