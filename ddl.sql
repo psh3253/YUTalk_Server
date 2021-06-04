@@ -41,7 +41,8 @@ CREATE TABLE yutalk.chat_member
     user_id              VARCHAR(15) NOT NULL,
     room_id              INTEGER     NOT NULL,
     invite_time          TIMESTAMP   NOT NULL,
-    last_read_message_id INT         NOT NULL
+    last_read_message_id INT         NOT NULL,
+    hidden               BOOLEAN     NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 

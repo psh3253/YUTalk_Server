@@ -32,16 +32,27 @@ public class LoadMessageService {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
             ArrayList<Integer> messageList = MessageDao.getInstance().selectMessageList(connection, roomId);
-            for (int i = 0; i < messageList.size(); i++) {
-                Message message = MessageDao.getInstance().selectMessage(connection, messageList.get(i));
-                messageData.put(messageList.get(i), new String[]{
-                        Integer.toString(message.getMessageId()),
-                        message.getUserId(),
-                        MemberDao.getInstance().selectMember(connection, message.getUserId()).getName(),
-                        message.getMessageType(),
-                        message.getMessage(),
-                        format.format(message.getSendTime())
-                });
+            for (Integer integer : messageList) {
+                Message message = MessageDao.getInstance().selectMessage(connection, integer);
+                if (!message.getMessageType().equals("info")) {
+                    messageData.put(integer, new String[]{
+                            Integer.toString(message.getMessageId()),
+                            message.getUserId(),
+                            MemberDao.getInstance().selectMember(connection, message.getUserId()).getName(),
+                            message.getMessageType(),
+                            message.getMessage(),
+                            format.format(message.getSendTime())
+                    });
+                } else {
+                    messageData.put(integer, new String[]{
+                            Integer.toString(message.getMessageId()),
+                            message.getUserId(),
+                            "시스템",
+                            message.getMessageType(),
+                            message.getMessage(),
+                            format.format(message.getSendTime())
+                    });
+                }
             }
             responseObject.put("loadMessageResponse", messageData);
             connection.commit();

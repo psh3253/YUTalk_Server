@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class ClientManager implements Runnable {
 
-    private Socket socket;
+    private final Socket socket;
 
     ClientManager(Socket socket) {
         this.socket = socket;
@@ -78,8 +78,20 @@ public class ClientManager implements Runnable {
                             out.flush();
                             break;
                         }
+                        case "inviteMemberRequest": {
+                            ArrayList<String> memberUserIdList = new ArrayList<>();
+                            for (int i = 0; i < receivedObject.length - 3; i++) {
+                                memberUserIdList.add(receivedObject[i + 3]);
+                            }
+                            InviteMemberService.getInstance().inviteMember(receivedObject[1], Integer.parseInt(receivedObject[2]), memberUserIdList);
+                            String[] responseObject = new String[1];
+                            responseObject[0] = "inviteMemberResponse";
+                            out.writeObject(responseObject);
+                            out.flush();
+                            break;
+                        }
                         case "sendMessageRequest": {
-                            SendMessageService.getInstance().sendMessage(receivedObject[1], Integer.parseInt(receivedObject[2]),  receivedObject[3]);
+                            SendMessageService.getInstance().sendMessage(receivedObject[1], Integer.parseInt(receivedObject[2]), receivedObject[3]);
                             String[] responseObject = new String[1];
                             responseObject[0] = "sendMessageResponse";
                             out.writeObject(responseObject);

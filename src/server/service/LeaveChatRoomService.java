@@ -1,6 +1,8 @@
 package server.service;
 
 import server.dao.ChatRoomDao;
+import server.dao.MemberDao;
+import server.dao.MessageDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
 import server.model.ChatRoom;
@@ -24,12 +26,15 @@ public class LeaveChatRoomService {
             connection = ConnectionProvider.getInstance().getConnection();
             connection.setAutoCommit(false);
             ChatRoom chatRoom = ChatRoomDao.getInstance().selectChatRoom(connection, roomId);
-            if(chatRoom.getHeadcount() == 1)
-            {
-                ChatRoomDao.getInstance().deleteMemberFromChatRoom(connection, userId, roomId);
-                ChatRoomDao.getInstance().deleteChatRoom(connection, roomId);
+            if(chatRoom.getRoomType().equals("private")) {
+                ChatRoomDao.getInstance().hiddenChatRoom(connection, userId, roomId);
             } else {
                 ChatRoomDao.getInstance().deleteMemberFromChatRoom(connection, userId, roomId);
+                MessageDao.getInstance().insertMessage(connection, "system", roomId, "info", MemberDao.getInstance().selectMember(connection, userId).getName() + "님이 퇴장하셨습니다.");
+                if(chatRoom.getHeadcount() == 1)
+                {
+                    ChatRoomDao.getInstance().deleteChatRoom(connection, roomId);
+                }
             }
             connection.commit();
         } catch (SQLException exception) {
