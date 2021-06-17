@@ -1,6 +1,5 @@
 package server.service;
 
-import server.dao.ChatRoomDao;
 import server.dao.MemberDao;
 import server.dao.MessageDao;
 import server.jdbc.ConnectionProvider;

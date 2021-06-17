@@ -1,6 +1,5 @@
 package server.runnable;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +18,7 @@ public class ServerRunnable implements Runnable {
                 thread.start();
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "소켓 생성에 실패하였습니다.", "실행 실패", JOptionPane.WARNING_MESSAGE);
+            System.out.println("소켓 생성에 실패하였습니다.");
             System.exit(-1);
         }
     }

@@ -36,6 +36,17 @@ public class ChatRoomDao {
                     statement.executeUpdate();
                     return roomId;
                 }
+                statement = connection.prepareStatement("SELECT * FROM chat_room WHERE name = ?");
+                statement.setString(1, friendName + "," + userName);
+                resultSet = statement.executeQuery();
+                if(resultSet.next()) {
+                    roomId = resultSet.getInt("room_id");
+                    statement = connection.prepareStatement("UPDATE chat_member SET hidden = FALSE WHERE user_id = ? AND room_id = ?");
+                    statement.setString(1, userId);
+                    statement.setInt(2, roomId);
+                    statement.executeUpdate();
+                    return roomId;
+                }
                 statement = connection.prepareStatement("INSERT INTO chat_room(room_id, room_type, name, headcount, last_message, create_time, last_time) VALUES (null, 'private', ?, 2, null, now(), now())");
                 statement.setString(1, userName + "," + friendName);
                 statement.executeUpdate();
@@ -185,10 +196,22 @@ public class ChatRoomDao {
         }
     }
 
-    public void hiddenChatRoom(Connection connection, String userId, int roomId) throws SQLException {
+    public void hideChatRoom(Connection connection, String userId, int roomId) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement("UPDATE chat_member SET hidden = TRUE WHERE user_id = ? AND room_id = ?");
+            statement.setString(1, userId);
+            statement.setInt(2, roomId);
+            statement.executeUpdate();
+        } finally {
+            JdbcUtil.getInstance().close(statement);
+        }
+    }
+
+    public void unHideChatRoom(Connection connection, String userId, int roomId) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("UPDATE chat_member SET hidden = FALSE WHERE user_id = ? AND room_id = ?");
             statement.setString(1, userId);
             statement.setInt(2, roomId);
             statement.executeUpdate();

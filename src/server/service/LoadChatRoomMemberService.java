@@ -2,16 +2,12 @@ package server.service;
 
 import server.dao.ChatRoomDao;
 import server.dao.MemberDao;
-import server.dao.MessageDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
 import server.model.Member;
-import server.model.Message;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,8 +31,8 @@ public class LoadChatRoomMemberService {
             connection.setAutoCommit(false);
 
             ArrayList<String> chatRoomMemberList = ChatRoomDao.getInstance().selectChatRoomMemberList(connection, roomId);
-            for (int i = 0; i < chatRoomMemberList.size(); i++) {
-                Member member = MemberDao.getInstance().selectMember(connection, chatRoomMemberList.get(i));
+            for (String s : chatRoomMemberList) {
+                Member member = MemberDao.getInstance().selectMember(connection, s);
                 chatRoomMemberData.add(new String[]{member.getUserId(), member.getName()});
             }
             responseObject.put("loadChatRoomMemberResponse", chatRoomMemberData);

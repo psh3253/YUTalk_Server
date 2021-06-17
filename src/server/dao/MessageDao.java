@@ -1,7 +1,6 @@
 package server.dao;
 
 import server.jdbc.JdbcUtil;
-import server.model.ChatRoom;
 import server.model.Message;
 
 import java.sql.*;
@@ -27,11 +26,17 @@ public class MessageDao {
             statement.setString(3, messageType);
             statement.setString(4, message);
             statement.executeUpdate();
-            if(messageType.equals("text")) {
+            if (messageType.equals("text")) {
                 statement = connection.prepareStatement("UPDATE chat_room SET last_message = ?, last_time = now() WHERE room_id = ?");
                 statement.setString(1, message);
                 statement.setInt(2, roomId);
                 statement.executeUpdate();
+            }
+            if (ChatRoomDao.getInstance().selectChatRoom(connection, roomId).getRoomType().equals("private")) {
+                ArrayList<String> memberList = ChatRoomDao.getInstance().selectChatRoomMemberList(connection, roomId);
+                for (String s : memberList) {
+                    ChatRoomDao.getInstance().unHideChatRoom(connection, s, roomId);
+                }
             }
         } finally {
             JdbcUtil.getInstance().close(statement);

@@ -1,10 +1,8 @@
 package server.service;
 
-import server.dao.ChatRoomDao;
 import server.dao.MemberDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
-import server.model.ChatRoom;
 
 import java.sql.Connection;
 import java.sql.SQLException;

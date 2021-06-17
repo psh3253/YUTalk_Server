@@ -27,7 +27,7 @@ public class LeaveChatRoomService {
             connection.setAutoCommit(false);
             ChatRoom chatRoom = ChatRoomDao.getInstance().selectChatRoom(connection, roomId);
             if(chatRoom.getRoomType().equals("private")) {
-                ChatRoomDao.getInstance().hiddenChatRoom(connection, userId, roomId);
+                ChatRoomDao.getInstance().hideChatRoom(connection, userId, roomId);
             } else {
                 ChatRoomDao.getInstance().deleteMemberFromChatRoom(connection, userId, roomId);
                 MessageDao.getInstance().insertMessage(connection, "system", roomId, "info", MemberDao.getInstance().selectMember(connection, userId).getName() + "님이 퇴장하셨습니다.");

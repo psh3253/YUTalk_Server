@@ -5,9 +5,6 @@ import server.dao.MemberDao;
 import server.dao.MessageDao;
 import server.jdbc.ConnectionProvider;
 import server.jdbc.JdbcUtil;
-import server.model.ChatRoom;
-import server.model.Member;
-import server.model.Message;
 
 import java.sql.Connection;
 import java.sql.SQLException;
