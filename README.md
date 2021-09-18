@@ -1,6 +1,10 @@
-# YUTalk
+# YUTalk_Server
 
 자바로 Thread와 Socket 통신을 사용하여 구현한 채팅 서버입니다.
+
+YUTalk의 서버 프로그램입니다.
++ [YUTalk](https://github.com/psh3253/yutalk)
+
 
 ## Getting Started / 어떻게 시작하나요?
 
